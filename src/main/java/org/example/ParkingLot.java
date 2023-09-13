@@ -2,8 +2,17 @@ package org.example;
 
 
 public class ParkingLot {
-    Boolean[] parkingSpots =  { false, true, true, false };
+    private static ParkingLot parkingLotInstance;
+    private static Boolean[] parkingSpots = {false};
 
+    private ParkingLot() {
+    }
+
+
+    public static synchronized ParkingLot getInstance() {
+        if (parkingLotInstance == null) parkingLotInstance = new ParkingLot();
+        return parkingLotInstance;
+    }
 
     private int findAvailableSpot(Boolean[] parkingSpots) {
         for (int i = 0; i < parkingSpots.length; i++) {
@@ -18,17 +27,14 @@ public class ParkingLot {
         parkingSpots[spotIndex] = true;
     }
 
-   public boolean park(){
-       int availableSpot = findAvailableSpot(this.parkingSpots);
-       if (availableSpot != -1) {
-           parkCar(parkingSpots, availableSpot);
-           return true;
-       } else {
-           return false;
-       }
-   }
-
-
-
+    public boolean parkCar() {
+        int availableSpot = findAvailableSpot(this.parkingSpots);
+        if (availableSpot != -1) {
+            parkCar(parkingSpots, availableSpot);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }
