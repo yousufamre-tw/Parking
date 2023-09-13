@@ -1,7 +1,8 @@
 package org.bootcamp.tests;
 
-import org.example.ParkingLot;
-import org.example.ParkingLotException;
+import org.bootcamp.ParkingLot;
+import org.bootcamp.ParkingLotException;
+import org.bootcamp.Vehicle;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,88 +10,90 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Field;
 
 public class ParkingLotTests {
-    @BeforeEach
-    public void resetSingleton() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        Field parkingSpots = ParkingLot.class.getDeclaredField("parkingSpots");
-        parkingSpots.setAccessible(true);
-        parkingSpots.set(null, null);
-        Field parkingLotInstance = ParkingLot.class.getDeclaredField("parkingLotInstance");
-        parkingLotInstance.setAccessible(true);
-        parkingLotInstance.set(null, null);
-    }
 
     @Test
     public void shouldBeAbleToParkTheCar(){
-        ParkingLot parkingLot = ParkingLot.getInstance();
-        Vehicle vehicle = new Vehicle();
-        Assertions.assertDoesNotThrow(() -> parkingLot.park(vehicle));
+        ParkingLot parkingLot = new ParkingLot();
+        Car car = new Car();
+
+        Assertions.assertDoesNotThrow(() -> parkingLot.park(car));
+    }
+
+    @Test
+    public void shouldNotBeAbleToParkTheSameCarAgain() throws ParkingLotException {
+        ParkingLot parkingLot = new ParkingLot();
+        Car car = new Car();
+
+        parkingLot.park(car);
+
+        Assertions.assertThrows(ParkingLotException.class ,() -> parkingLot.park(car));
     }
 
     @Test
     public void shouldAbleToParkMultipleCar() {
-        ParkingLot parkingLot = ParkingLot.getInstance();
-        Vehicle vehicle1 = new Vehicle();
-        Assertions.assertDoesNotThrow(() -> parkingLot.park(vehicle1));
-        Vehicle vehicle2 = new Vehicle();
-        Assertions.assertDoesNotThrow(() -> parkingLot.park(vehicle2));
+        ParkingLot parkingLot = new ParkingLot();
+        Car car1 = new Car();
+        Car car2 = new Car();
+
+        Assertions.assertDoesNotThrow(() -> parkingLot.park(car1));
+        Assertions.assertDoesNotThrow(() -> parkingLot.park(car2));
     }
 
     @Test
-    public void shouldNotBeAbleToParkCarIfParkingIsFull() {
-        ParkingLot parkingLot = ParkingLot.getInstance();
-        Vehicle vehicle1 = new Vehicle();
-        Assertions.assertDoesNotThrow(() -> parkingLot.park(vehicle1));
+    public void shouldNotBeAbleToParkCarIfParkingIsFull() throws ParkingLotException {
+        ParkingLot parkingLot = new ParkingLot();
+        Car car1 = new Car();
+        Car car2 = new Car();
+        Car car3 = new Car();
+        parkingLot.park(car1);
+        parkingLot.park(car2);
 
-        Vehicle vehicle2 = new Vehicle();
-        Assertions.assertDoesNotThrow(() -> parkingLot.park(vehicle2));
-
-        Vehicle vehicle3 = new Vehicle();
-        Assertions.assertThrows(ParkingLotException.class ,() -> parkingLot.park(vehicle3));
+        Assertions.assertThrows(ParkingLotException.class ,() -> parkingLot.park(car3));
     }
 
     @Test
     public void shouldCheckIfMyCarIsParked() throws ParkingLotException {
-        ParkingLot parkingLot = ParkingLot.getInstance();
-        Vehicle vehicle = new Vehicle();
+        ParkingLot parkingLot = new ParkingLot();
+        Car car = new Car();
 
-        parkingLot.park(vehicle);
+        parkingLot.park(car);
 
-        int index = parkingLot.isMyCarParked(vehicle);
+        int index = parkingLot.isMyCarParked(car);
 
         Assertions.assertNotEquals(-1, index);
     }
 
     @Test
     public void shouldBeAbleToUnparkTheCar() throws ParkingLotException {
-        ParkingLot parkingLot = ParkingLot.getInstance();
-        Vehicle vehicle = new Vehicle();
+        ParkingLot parkingLot = new ParkingLot();
+        Car car = new Car();
 
-        parkingLot.park(vehicle);
+        parkingLot.park(car);
 
-        Assertions.assertDoesNotThrow(() -> parkingLot.unpark(vehicle));
+        Assertions.assertDoesNotThrow(() -> parkingLot.unpark(car));
     }
 
     @Test
     public void shouldNotBeInParkingLotAfterUnpark() throws ParkingLotException {
-        ParkingLot parkingLot = ParkingLot.getInstance();
-        Vehicle vehicle = new Vehicle();
+        ParkingLot parkingLot = new ParkingLot();
+        Car car = new Car();
 
-        parkingLot.park(vehicle);
+        parkingLot.park(car);
 
-        parkingLot.unpark(vehicle);
+        parkingLot.unpark(car);
 
 
-        int index = parkingLot.isMyCarParked(vehicle);
+        int index = parkingLot.isMyCarParked(car);
 
         Assertions.assertEquals(-1, index);
     }
 
     @Test
     public void unparkTheCarWhichIsNotInParkingLotThrowsException() {
-        ParkingLot parkingLot = ParkingLot.getInstance();
-        Vehicle vehicle = new Vehicle();
+        ParkingLot parkingLot = new ParkingLot();
+        Car car = new Car();
 
-        Assertions.assertThrows(ParkingLotException.class, () -> parkingLot.unpark(vehicle));
+        Assertions.assertThrows(ParkingLotException.class, () -> parkingLot.unpark(car));
     }
 
 }

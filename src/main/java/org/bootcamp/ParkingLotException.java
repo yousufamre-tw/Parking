@@ -1,4 +1,4 @@
-package org.example;
+package org.bootcamp;
 
 public class ParkingLotException extends Exception{
     ParkingLotException(String message){
