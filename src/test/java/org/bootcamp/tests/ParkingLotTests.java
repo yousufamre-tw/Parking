@@ -1,13 +1,13 @@
 package org.bootcamp.tests;
 
-import org.bootcamp.ParkingLot;
-import org.bootcamp.ParkingLotException;
-import org.bootcamp.Vehicle;
+import org.bootcamp.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ParkingLotTests {
 
@@ -85,7 +85,7 @@ public class ParkingLotTests {
 
         int index = parkingLot.isMyCarParked(car);
 
-        Assertions.assertEquals(-1, index);
+        assertEquals(-1, index);
     }
 
     @Test
@@ -94,6 +94,22 @@ public class ParkingLotTests {
         Car car = new Car();
 
         Assertions.assertThrows(ParkingLotException.class, () -> parkingLot.unpark(car));
+    }
+
+    @Test
+    public void shouldNotifyTheOwnerAboutParkingStatusBeingFull() throws ParkingLotException {
+        ParkingLot parkingLot = new ParkingLot();
+        ParkingLotOwner observer = new ParkingLotOwner();
+
+        parkingLot.addPropertyChangeListener(observer);
+
+        Car car1 = new Car();
+        Car car2 = new Car();
+
+        parkingLot.park(car1);
+        parkingLot.park(car2);
+
+        assertEquals(observer.parkingLotStatusForOwner, ParkingLotStatus.FULL);
     }
 
 }

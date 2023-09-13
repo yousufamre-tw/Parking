@@ -1,14 +1,21 @@
 package org.bootcamp;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ParkingLot {
+public class ParkingLot  {
     private ArrayList<Vehicle> parkingSpots;
+
+    private PropertyChangeSupport support;
+    private ParkingLotStatus parkingSpotStatus;
     private static final int PARKING_SIZE = 2;
 
     public ParkingLot() {
         parkingSpots  = new ArrayList<>(Collections.nCopies(PARKING_SIZE, null));
+        parkingSpotStatus = ParkingLotStatus.NOT_FULL;
+        support = new PropertyChangeSupport(this);
     }
 
 
@@ -33,6 +40,10 @@ public class ParkingLot {
         if (availableSpot==-1)
             throw new ParkingLotException("No parking spot available");
         park(parkingSpots, availableSpot, vehicle);
+
+        availableSpot = findAvailableSpot(this.parkingSpots);
+        if (availableSpot==-1)
+            setParkingLotStatus(ParkingLotStatus.FULL);
     }
 
     public int isMyCarParked(Vehicle vehicle){
@@ -50,4 +61,13 @@ public class ParkingLot {
             throw new ParkingLotException("Car not available to unpark from parking lot");
         parkingSpots.set(spot, null);
     }
+
+    public void setParkingLotStatus(ParkingLotStatus value) {
+        support.firePropertyChange("parkingSpotStatus", this.parkingSpotStatus, value);
+        this.parkingSpotStatus = value;
+    }
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
+        support.addPropertyChangeListener(pcl);
+    }
+
 }
