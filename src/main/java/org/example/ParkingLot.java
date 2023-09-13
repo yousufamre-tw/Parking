@@ -1,15 +1,15 @@
 package org.example;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class ParkingLot {
     private static ParkingLot parkingLotInstance;
-    private static Boolean[] parkingSpots;
+    private static ArrayList<Vehicle> parkingSpots;
     private static final int PARKING_SIZE = 2;
 
     private ParkingLot() {
-        parkingSpots = new Boolean[PARKING_SIZE];
-        Arrays.fill(parkingSpots, Boolean.FALSE);
+        parkingSpots  = new ArrayList<Vehicle>(Collections.nCopies(PARKING_SIZE, null));
     }
 
     public static synchronized ParkingLot getInstance() {
@@ -17,23 +17,23 @@ public class ParkingLot {
         return parkingLotInstance;
     }
 
-    private int findAvailableSpot(Boolean[] parkingSpots) {
-        for (int i = 0; i < parkingSpots.length; i++) {
-            if (!parkingSpots[i]) {
+    private int findAvailableSpot(ArrayList<Vehicle> parkingSpots) {
+        for (int i = 0; i < parkingSpots.size(); i++) {
+            if (parkingSpots.get(i) == null) {
                 return i;
             }
         }
         return -1;
     }
 
-    private void parkCar(Boolean[] parkingSpots, int spotIndex) {
-        parkingSpots[spotIndex] = true;
+    private void park(ArrayList<Vehicle> parkingSpots, int availableSpot,Vehicle vehicle) {
+        parkingSpots.set(availableSpot, vehicle);
     }
 
-    public boolean parkCar() {
+    public boolean park(Vehicle vehicle) {
         int availableSpot = findAvailableSpot(this.parkingSpots);
-        if (availableSpot != -1) {
-            parkCar(parkingSpots, availableSpot);
+        if (availableSpot!=-1) {
+            park(parkingSpots, availableSpot, vehicle);
             return true;
         } else {
             return false;
