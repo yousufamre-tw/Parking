@@ -1,13 +1,16 @@
 package org.example;
 
+import java.util.Arrays;
 
 public class ParkingLot {
     private static ParkingLot parkingLotInstance;
-    private static Boolean[] parkingSpots = {false};
+    private static Boolean[] parkingSpots;
+    private static final int PARKING_SIZE = 2;
 
     private ParkingLot() {
+        parkingSpots = new Boolean[PARKING_SIZE];
+        Arrays.fill(parkingSpots, Boolean.FALSE);
     }
-
 
     public static synchronized ParkingLot getInstance() {
         if (parkingLotInstance == null) parkingLotInstance = new ParkingLot();
@@ -36,5 +39,4 @@ public class ParkingLot {
             return false;
         }
     }
-
 }
