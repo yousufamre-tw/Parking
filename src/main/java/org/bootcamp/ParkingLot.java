@@ -60,6 +60,8 @@ public class ParkingLot  {
         if(spot==-1)
             throw new ParkingLotException("Car not available to unpark from parking lot");
         parkingSpots.set(spot, null);
+        if(parkingSpotStatus == ParkingLotStatus.FULL)
+            setParkingLotStatus(ParkingLotStatus.NOT_FULL);
     }
 
     public void setParkingLotStatus(ParkingLotStatus value) {
