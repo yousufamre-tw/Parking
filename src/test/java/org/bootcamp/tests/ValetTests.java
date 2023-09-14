@@ -26,4 +26,23 @@ public class ValetTests {
 
         Assertions.assertThrows(ParkingLotException.class, ()->valet.park(new Car()));
     }
+
+    @Test
+    public void shouldBeAbleToUnParkTheCarFromParkingLot() throws ParkingLotException {
+
+        Valet valet = new Valet();
+        Car car = new Car();
+        valet.park(car);
+
+        Assertions.assertDoesNotThrow(() -> valet.unpark(car));
+    }
+
+    @Test
+    public void shouldThrowExceptionIfCarIsNotInParkingLotToUnpark() {
+
+        Valet valet = new Valet();
+        Car car = new Car();
+
+        Assertions.assertThrows(ParkingLotException.class, () -> valet.unpark(car));
+    }
 }
