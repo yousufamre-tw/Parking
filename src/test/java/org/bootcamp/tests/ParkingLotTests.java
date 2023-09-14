@@ -111,23 +111,6 @@ public class ParkingLotTests {
 
 
     @Test
-    public void shouldNotifyTheOwnerAboutParkingStatusBeingNotFullAfterUnpark() throws ParkingLotException {
-        ParkingLot parkingLot = new ParkingLot();
-        ParkingLotSubscriber owner = new ParkingLotSubscriber();
-
-        parkingLot.addPropertyChangeListener(owner);
-
-        Car car1 = new Car();
-        Car car2 = new Car();
-
-        parkingLot.park(car1);
-        parkingLot.park(car2);
-        parkingLot.unpark(car1);
-
-        assertEquals(owner.parkingLotStatus, ParkingLotStatus.NOT_FULL);
-    }
-
-    @Test
     public void shouldNotifyTheOwnerAndCopAboutParkingStatusBeingFull() throws ParkingLotException {
         ParkingLot parkingLot = new ParkingLot();
         ParkingLotSubscriber owner = new ParkingLotSubscriber();
@@ -143,6 +126,54 @@ public class ParkingLotTests {
         parkingLot.park(car2);
 
         assertEquals(owner.parkingLotStatus, ParkingLotStatus.FULL);
+        assertEquals(trafficCop.parkingLotStatus, ParkingLotStatus.FULL);
+    }
+
+    @Test
+    public void shouldNotifyCopAboutParkingStatusBeingNotFullAfterUnpark() throws ParkingLotException {
+        ParkingLot parkingLot = new ParkingLot();
+        ParkingLotSubscriber trafficCop = new ParkingLotSubscriber();
+
+        parkingLot.addPropertyChangeListener(trafficCop);
+        Car car1 = new Car();
+        Car car2 = new Car();
+
+        parkingLot.park(car1);
+        parkingLot.park(car2);
+        parkingLot.unpark(car1);
+        assertEquals(trafficCop.parkingLotStatus, ParkingLotStatus.NOT_FULL);
+    }
+
+    @Test
+    public void shouldNotifyOwnerAboutParkingStatusBeingNotFullAfterUnpark() throws ParkingLotException {
+        ParkingLot parkingLot = new ParkingLot();
+        ParkingLotSubscriber owner = new ParkingLotSubscriber();
+
+        parkingLot.addPropertyChangeListener(owner);
+        Car car1 = new Car();
+        Car car2 = new Car();
+
+        parkingLot.park(car1);
+        parkingLot.park(car2);
+        parkingLot.unpark(car1);
+        assertEquals(owner.parkingLotStatus, ParkingLotStatus.NOT_FULL);
+    }
+    @Test
+    public void shouldNotifyCopAboutParkingStatusBeingNotFullAfterUnparkAndIsReadyForRepark() throws ParkingLotException {
+        ParkingLot parkingLot = new ParkingLot();
+        ParkingLotSubscriber trafficCop = new ParkingLotSubscriber();
+
+        parkingLot.addPropertyChangeListener(trafficCop);
+        Car car1 = new Car();
+        Car car2 = new Car();
+
+        parkingLot.park(car1);
+        parkingLot.park(car2);
+        parkingLot.unpark(car1);
+
+        Car car3 = new Car();
+        Assertions.assertDoesNotThrow(()->parkingLot.park(car3));
+
         assertEquals(trafficCop.parkingLotStatus, ParkingLotStatus.FULL);
     }
 
