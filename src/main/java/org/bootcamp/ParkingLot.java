@@ -19,7 +19,6 @@ public class ParkingLot  {
     }
 
 
-
     private int findAvailableSpot(ArrayList<Vehicle> parkingSpots) {
         for (int i = 0; i < parkingSpots.size(); i++) {
             if (parkingSpots.get(i) == null) {
@@ -67,6 +66,10 @@ public class ParkingLot  {
     public void setParkingLotStatus(ParkingLotStatus value) {
         support.firePropertyChange("parkingSpotStatus", this.parkingSpotStatus, value);
         this.parkingSpotStatus = value;
+    }
+
+    public ParkingLotStatus getParkingStatus(){
+        return this.parkingSpotStatus;
     }
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
         support.addPropertyChangeListener(pcl);
